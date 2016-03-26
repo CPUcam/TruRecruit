@@ -162,7 +162,7 @@ app.get('/api/paypal/cancel', apiController.getPayPalCancel);
 app.get('/api/lob', apiController.getLob);
 app.get('/api/bitgo', apiController.getBitGo);
 app.post('/api/bitgo', apiController.postBitGo);
-app.get('/api/upload', apiController.getFileUpload);
+// app.get('/api/upload', apiController.getFileUpload);
 // app.post('/api/upload', apiController.uploadToMongo, apiController.postFileUpload);
 // app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 

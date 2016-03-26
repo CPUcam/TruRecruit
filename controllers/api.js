@@ -532,16 +532,16 @@ exports.postBitGo = function(req, res, next) {
   }
 };
 
-exports.getFileUpload = function(req, res, next) {
-  res.render('api/upload', {
-    title: 'File Upload'
-  });
-};
-
-exports.postFileUpload = function(req, res, next) {
-  req.flash('success', { msg: 'File was uploaded successfully.'});
-  res.redirect('/api/upload');
-};
+// exports.getFileUpload = function(req, res, next) {
+//   res.render('api/upload', {
+//     title: 'File Upload'
+//   });
+// };
+//
+// exports.postFileUpload = function(req, res, next) {
+//   req.flash('success', { msg: 'File was uploaded successfully.'});
+//   res.redirect('/api/upload');
+// };
 
 exports.uploadToMongo = function(req,res) {
      var dirname = require('path').dirname(__dirname);

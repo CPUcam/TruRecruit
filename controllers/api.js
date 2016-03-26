@@ -34,75 +34,6 @@ exports.getApi = function(req, res) {
   });
 };
 
-/**
- * GET /api/foursquare
- * Foursquare API example.
- */
-exports.getFoursquare = function(req, res, next) {
-  foursquare = require('node-foursquare')({
-    secrets: {
-      clientId: process.env.FOURSQUARE_ID,
-      clientSecret: process.env.FOURSQUARE_SECRET,
-      redirectUrl: process.env.FOURSQUARE_REDIRECT_URL
-    }
-  });
-
-  var token = _.find(req.user.tokens, { kind: 'foursquare' });
-  async.parallel({
-    trendingVenues: function(callback) {
-      foursquare.Venues.getTrending('40.7222756', '-74.0022724', { limit: 50 }, token.accessToken, function(err, results) {
-        callback(err, results);
-      });
-    },
-    venueDetail: function(callback) {
-      foursquare.Venues.getVenue('49da74aef964a5208b5e1fe3', token.accessToken, function(err, results) {
-        callback(err, results);
-      });
-    },
-    userCheckins: function(callback) {
-      foursquare.Users.getCheckins('self', null, token.accessToken, function(err, results) {
-        callback(err, results);
-      });
-    }
-  },
-  function(err, results) {
-    if (err) {
-      return next(err);
-    }
-    res.render('api/foursquare', {
-      title: 'Foursquare API',
-      trendingVenues: results.trendingVenues,
-      venueDetail: results.venueDetail,
-      userCheckins: results.userCheckins
-    });
-  });
-};
-
-/**
- * GET /api/tumblr
- * Tumblr API example.
- */
-exports.getTumblr = function(req, res, next) {
-  tumblr = require('tumblr.js');
-
-  var token = _.find(req.user.tokens, { kind: 'tumblr' });
-  var client = tumblr.createClient({
-    consumer_key: process.env.TUMBLR_KEY,
-    consumer_secret: process.env.TUMBLR_SECRET,
-    token: token.accessToken,
-    token_secret: token.tokenSecret
-  });
-  client.posts('mmosdotcom.tumblr.com', { type: 'photo' }, function(err, data) {
-    if (err) {
-      return next(err);
-    }
-    res.render('api/tumblr', {
-      title: 'Tumblr API',
-      blog: data.blog,
-      photoset: data.posts[0].photos
-    });
-  });
-};
 
 /**
  * GET /api/facebook
@@ -162,145 +93,12 @@ exports.getScraping = function(req, res, next) {
 };
 
 /**
- * GET /api/github
- * GitHub API Example.
- */
-exports.getGithub = function(req, res, next) {
-  Github = require('github-api');
-
-  var token = _.find(req.user.tokens, { kind: 'github' });
-  var github = new Github({ token: token.accessToken });
-  var repo = github.getRepo('sahat', 'requirejs-library');
-  repo.show(function(err, repo) {
-    if (err) {
-      return next(err);
-    }
-    res.render('api/github', {
-      title: 'GitHub API',
-      repo: repo
-    });
-  });
-
-};
-
-/**
  * GET /api/aviary
  * Aviary image processing example.
  */
 exports.getAviary = function(req, res) {
   res.render('api/aviary', {
     title: 'Aviary API'
-  });
-};
-
-/**
- * GET /api/nyt
- * New York Times API example.
- */
-exports.getNewYorkTimes = function(req, res, next) {
-  request = require('request');
-
-  var query = querystring.stringify({
-    'api-key': process.env.NYT_KEY,
-    'list-name': 'young-adult'
-  });
-  var url = 'http://api.nytimes.com/svc/books/v2/lists?' + query;
-
-  request.get(url, function(err, request, body) {
-    if (err) {
-      return next(err);
-    }
-    if (request.statusCode === 403) {
-      return next(Error('Missing or Invalid New York Times API Key'));
-    }
-    var bestsellers = JSON.parse(body);
-    res.render('api/nyt', {
-      title: 'New York Times API',
-      books: bestsellers.results
-    });
-  });
-};
-
-/**
- * GET /api/lastfm
- * Last.fm API example.
- */
-exports.getLastfm = function(req, res, next) {
-  request = require('request');
-  LastFmNode = require('lastfm').LastFmNode;
-
-  var lastfm = new LastFmNode({
-    api_key: process.env.LASTFM_KEY,
-    secret: process.env.LASTFM_SECRET
-  });
-
-  async.parallel({
-    artistInfo: function(done) {
-      lastfm.request('artist.getInfo', {
-        artist: 'The Pierces',
-        handlers: {
-          success: function(data) {
-            done(null, data);
-          },
-          error: function(err) {
-            done(err);
-          }
-        }
-      });
-    },
-    artistTopTracks: function(done) {
-      lastfm.request('artist.getTopTracks', {
-        artist: 'The Pierces',
-        handlers: {
-          success: function(data) {
-            var tracks = [];
-            _.each(data.toptracks.track, function(track) {
-              tracks.push(track);
-            });
-            done(null, tracks.slice(0,10));
-          },
-          error: function(err) {
-            done(err);
-          }
-        }
-      });
-    },
-    artistTopAlbums: function(done) {
-      lastfm.request('artist.getTopAlbums', {
-        artist: 'The Pierces',
-        handlers: {
-          success: function(data) {
-            var albums = [];
-            _.each(data.topalbums.album, function(album) {
-              albums.push(album.image.slice(-1)[0]['#text']);
-            });
-            done(null, albums.slice(0, 4));
-          },
-          error: function(err) {
-            done(err);
-          }
-        }
-      });
-    }
-  },
-  function(err, results) {
-    if (err) {
-      return next(err.message);
-    }
-    var artist = {
-      name: results.artistInfo.artist.name,
-      image: results.artistInfo.artist.image.slice(-1)[0]['#text'],
-      tags: results.artistInfo.artist.tags.tag,
-      bio: results.artistInfo.artist.bio.summary,
-      stats: results.artistInfo.artist.stats,
-      similar: results.artistInfo.artist.similar.artist,
-      topAlbums: results.artistTopAlbums,
-      topTracks: results.artistTopTracks
-    };
-    res.render('api/lastfm', {
-      title: 'Last.fm API',
-      artist: artist
-    });
   });
 };
 
@@ -356,61 +154,6 @@ exports.postTwitter = function(req, res, next) {
     }
     req.flash('success', { msg: 'Tweet has been posted.'});
     res.redirect('/api/twitter');
-  });
-};
-
-/**
- * GET /api/steam
- * Steam API example.
- */
-exports.getSteam = function(req, res, next) {
-  request = require('request');
-
-  var steamId = '76561197982488301';
-  var query = { l: 'english', steamid: steamId, key: process.env.STEAM_KEY };
-  async.parallel({
-    playerAchievements: function(done) {
-      query.appid = '49520';
-      var qs = querystring.stringify(query);
-      request.get({ url: 'http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?' + qs, json: true }, function(error, request, body) {
-        if (request.statusCode === 401) {
-          return done(new Error('Missing or Invalid Steam API Key'));
-        }
-        done(error, body);
-      });
-    },
-    playerSummaries: function(done) {
-      query.steamids = steamId;
-      var qs = querystring.stringify(query);
-      request.get({ url: 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?' + qs, json: true }, function(err, request, body) {
-        if (request.statusCode === 401) {
-          return done(new Error('Missing or Invalid Steam API Key'));
-        }
-        done(err, body);
-      });
-    },
-    ownedGames: function(done) {
-      query.include_appinfo = 1;
-      query.include_played_free_games = 1;
-      var qs = querystring.stringify(query);
-      request.get({ url: 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?' + qs, json: true }, function(err, request, body) {
-        if (request.statusCode === 401) {
-          return done(new Error('Missing or Invalid Steam API Key'));
-        }
-        done(err, body);
-      });
-    }
-  },
-  function(err, results) {
-    if (err) {
-      return next(err);
-    }
-    res.render('api/steam', {
-      title: 'Steam Web API',
-      ownedGames: results.ownedGames.response.games,
-      playerAchievemments: results.playerAchievements.playerstats,
-      playerSummary: results.playerSummaries.response.players[0]
-    });
   });
 };
 
@@ -620,69 +363,6 @@ exports.getLinkedin = function(req, res, next) {
 };
 
 /**
- * GET /api/instagram
- * Instagram API example.
- */
-exports.getInstagram = function(req, res, next) {
-  ig = require('instagram-node').instagram();
-
-  var token = _.find(req.user.tokens, { kind: 'instagram' });
-  ig.use({ client_id: process.env.INSTAGRAM_ID, client_secret: process.env.INSTAGRAM_SECRET });
-  ig.use({ access_token: token.accessToken });
-  async.parallel({
-    searchByUsername: function(done) {
-      ig.user_search('richellemead', function(err, users, limit) {
-        done(err, users);
-      });
-    },
-    searchByUserId: function(done) {
-      ig.user('175948269', function(err, user) {
-        done(err, user);
-      });
-    },
-    popularImages: function(done) {
-      ig.media_popular(function(err, medias) {
-        done(err, medias);
-      });
-    },
-    myRecentMedia: function(done) {
-      ig.user_self_media_recent(function(err, medias, pagination, limit) {
-        done(err, medias);
-      });
-    }
-  }, function(err, results) {
-    if (err) {
-      return next(err);
-    }
-    res.render('api/instagram', {
-      title: 'Instagram API',
-      usernames: results.searchByUsername,
-      userById: results.searchByUserId,
-      popularImages: results.popularImages,
-      myRecentMedia: results.myRecentMedia
-    });
-  });
-};
-
-/**
- * GET /api/yahoo
- * Yahoo API example.
- */
-exports.getYahoo = function(req, res) {
-  Y = require('yui/yql');
-
-  Y.YQL('SELECT * FROM weather.forecast WHERE (location = 10007)', function(response) {
-    var location = response.query.results.channel.location;
-    var condition = response.query.results.channel.item.condition;
-    res.render('api/yahoo', {
-      title: 'Yahoo API',
-      location: location,
-      condition: condition
-    });
-  });
-};
-
-/**
  * GET /api/paypal
  * PayPal SDK example.
  */
@@ -862,3 +542,24 @@ exports.postFileUpload = function(req, res, next) {
   req.flash('success', { msg: 'File was uploaded successfully.'});
   res.redirect('/api/upload');
 };
+
+exports.uploadToMongo = function(req,res) {
+     var dirname = require('path').dirname(__dirname);
+     var filename = req.files.file.name;
+     var path = req.files.file.path;
+     var type = req.files.file.mimetype;
+
+     var read_stream =  fs.createReadStream(dirname + '/' + path);
+
+     var conn = req.conn;
+     var Grid = require('gridfs-stream');
+     Grid.mongo = mongoose.mongo;
+
+     var gfs = Grid(conn.db);
+
+     var writestream = gfs.createWriteStream({
+        filename: filename
+    });
+     read_stream.pipe(writestream);
+
+}

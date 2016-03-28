@@ -127,7 +127,7 @@ exports.getAccount = function(req, res) {
  * GET /upload
  * Resume upload.
  */
-exports.uploadResume = function(req, res) {
+exports.getUploadResume = function(req, res) {
   res.render('account/upload', {
     title: 'Resume'
   });

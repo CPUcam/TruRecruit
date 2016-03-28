@@ -129,6 +129,7 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+app.get('/upload', userController.getUploadResume);
 
 /**
  * API examples routes.
@@ -211,6 +212,27 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
 app.get('/auth/steam', passport.authorize('openid', { state: 'SOME STATE' }));
 app.get('/auth/steam/callback', passport.authorize('openid', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
+});
+
+router.all('/upload',function(req,res){
+     var dirname = require('path').dirname(__dirname);
+     var filename = req.files.file.name;
+     var path = req.files.file.path;
+     var type = req.files.file.mimetype;
+
+     var read_stream =  fs.createReadStream(dirname + '/' + path);
+
+     var conn = req.conn;
+     var Grid = require('gridfs-stream');
+     Grid.mongo = mongoose.mongo;
+
+     var gfs = Grid(conn.db);
+
+     var writestream = gfs.createWriteStream({
+        filename: filename
+    });
+     read_stream.pipe(writestream);
+
 });
 
 /**

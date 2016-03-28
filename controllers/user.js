@@ -129,7 +129,7 @@ exports.getAccount = function(req, res) {
  */
 exports.uploadResume = function(req, res) {
   res.render('account/upload', {
-    title: 'Resume Upload'
+    title: 'Resume'
   });
 };
 

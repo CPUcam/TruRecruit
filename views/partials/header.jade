@@ -10,6 +10,7 @@
         .headerLogo
           img(src='http://i.imgur.com/WDib0rH.png', style='height: 30px')
     .collapse.navbar-collapse
+      <!--
       ul.nav.navbar-nav
         li(class=title=='Home'?'active':undefined)
           a(href='/') Home
@@ -17,10 +18,8 @@
           a(href='/api') API Examples
         li(class=title=='Contact'?'active':undefined)
           a(href='/contact') Contact
+      -->
       ul.nav.navbar-nav.navbar-right
-        if user
-          li(class=title=='Resume'?'active':undefined)
-            a(href='/upload') Resume
         if !user
           li(class=title=='Login'?'active':undefined)
             a(href='/login') Login
@@ -36,6 +35,9 @@
               | #{user.profile.name || user.email || user.id}&nbsp;
               i.caret
             ul.dropdown-menu
+              if user
+                li(class=title=='Resume'?'active':undefined)
+                  a(href='/upload') Resume
               li
                 a(href='/account') My Account
               li.divider

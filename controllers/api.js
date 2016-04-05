@@ -49,14 +49,14 @@ exports.getFacebook = function(req, res, next) {
 };
 
 exports.getFileUpload = function(req, res, next) {
-  res.render('api/upload', {
+  res.render('/upload', {
     title: 'File Upload'
   });
 };
 
 exports.postFileUpload = function(req, res, next) {
   req.flash('success', { msg: 'File was uploaded successfully.'});
-  res.redirect('/api/upload');
+  res.redirect('/upload');
 };
 
 

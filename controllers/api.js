@@ -4,59 +4,83 @@
 var _ = require('lodash');
 var async = require('async');
 var querystring = require('querystring');
+var fs = require('fs');
+var path = require('path');
+var uid = require('uid2');
+var mime = require('mime');
+
+var TARGET_PATH = path.resolve(__dirname, '../writable/');
+var FILE_TYPES = ['file/pdf', 'file/doc', 'file/docx'];
 
 /**
- * GET /api
- * List of API examples.
+ * GET /upload
+ * File upload page
  */
-exports.getApi = function(req, res) {
-  res.render('api/index', {
-    title: 'API Examples'
-  });
-};
-
-/**
- * GET /api/facebook
- * Facebook API example.
- */
-exports.getFacebook = function(req, res, next) {
-  graph = require('fbgraph');
-
-  var token = _.find(req.user.tokens, { kind: 'facebook' });
-  graph.setAccessToken(token.accessToken);
-  async.parallel({
-    getMe: function(done) {
-      graph.get(req.user.facebook + "?fields=id,name,email,first_name,last_name,gender,link,locale,timezone", function(err, me) {
-        done(err, me);
-      });
-    },
-    getMyFriends: function(done) {
-      graph.get(req.user.facebook + '/friends', function(err, friends) {
-        done(err, friends.data);
-      });
-    }
-  },
-  function(err, results) {
-    if (err) {
-      return next(err);
-    }
-    res.render('api/facebook', {
-      title: 'Facebook API',
-      me: results.getMe,
-      friends: results.getMyFriends
-    });
-  });
-};
-
 exports.getFileUpload = function(req, res, next) {
   res.render('/upload', {
     title: 'File Upload'
   });
 };
 
+/**
+ * POST /upload
+ *
+ */
 exports.postFileUpload = function(req, res, next) {
-  req.flash('success', { msg: 'File was uploaded successfully.'});
-  res.redirect('/upload');
+  var is;
+  var os;
+  var targetPath;
+  var targetName;
+  var tempPath = req.files.file.path;
+  //get the mime type of the file
+  var type = mime.lookup(req.files.file.path);
+  //get the extension of the file
+  var extension = req.files.file.path.split(/[. ]+/).pop();
+
+  //check to see if we support the file type
+  if (FILE_TYPES.indexOf(type) == -1) {
+    return res.send(415, 'Supported image formats: pdf, doc, docx.');
+  }
+
+  //create a new name for the image
+  targetName = uid(22) + '.' + extension;
+
+  //determine the new path to save the image
+  targetPath = path.join(TARGET_PATH, targetName);
+
+  //create a read stream in order to read the file
+  is = fs.createReadStream(tempPath);
+
+  //create a write stream in order to write the a new file
+  os = fs.createWriteStream(targetPath);
+
+  is.pipe(os);
+
+  //handle error
+  is.on('error', function() {
+    if (err) {
+      return res.send(500, 'Something went wrong');
+    }
+  });
+
+  //if we are done moving the file
+  is.on('end', function() {
+
+    //delete file from temp folder
+    fs.unlink(tempPath, function(err) {
+      if (err) {
+        return res.send(500, 'Something went wrong');
+      }
+
+      //send something nice to user
+      res.render('image', {
+        name: targetName,
+        type: type,
+        extension: extension
+      });
+
+    });//#end - unlink
+  });//#end - on.end
 };
 
 

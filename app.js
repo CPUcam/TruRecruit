@@ -127,7 +127,7 @@ app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.get('/upload', passportConf.isAuthenticated, userController.getUploadResume);
-app.post('/upload', passportConf.isAuthenticated, apiController.postUploadResume);
+app.post('/upload', passportConf.isAuthenticated, apiController.postFileUpload);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);

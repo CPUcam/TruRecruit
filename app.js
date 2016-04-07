@@ -74,7 +74,17 @@ app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(busboy());
+app.use(busboy({ immediate: true }));
+// ...
+app.use(function(req, res) {
+  req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    // ...
+  });
+  req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
+    // ...
+  });
+  // etc ...
+});
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());

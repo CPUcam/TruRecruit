@@ -73,6 +73,7 @@ app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(busboy());
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());

@@ -32,11 +32,11 @@ exports.postFileUpload = function(req, res, next) {
   var os;
   var targetPath;
   var targetName;
-  var tempPath = req.files.busboy.path;
+  var tempPath = req.files.path;
   //get the mime type of the file
-  var type = mime.lookup(req.files.busboy.path);
+  var type = mime.lookup(req.files.path);
   //get the extension of the file
-  var extension = req.files.busboy.path.split(/[. ]+/).pop();
+  var extension = req.files.path.split(/[. ]+/).pop();
 
   //check to see if we support the file type
   if (FILE_TYPES.indexOf(type) == -1) {

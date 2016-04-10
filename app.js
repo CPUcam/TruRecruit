@@ -22,6 +22,7 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var multer = require('multer');
+// var upload = multer({ dest: './uploads/'});
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -69,12 +70,11 @@ app.use(sass({
   dest: path.join(__dirname, 'public'),
   sourceMap: true
 }));
-app.use(multer({ dest: './uploads/'}));
 app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(multer({dest: './uploads/'}).single('myFile'));
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());

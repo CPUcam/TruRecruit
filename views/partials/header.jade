@@ -22,7 +22,7 @@ section.hero
                       a.btn-white.btn-small(href='/signup') Create Account
                   else
                     li.dropdown(class=title=='Account Management'?'active':undefined)
-                      a.dropdown=toggle(href='#', data-toggle='dropdown')
+                      a.dropdown-toggle(href='#', data-toggle='dropdown')
                         if user.profile.picture
                           img(src='#{user.profile.picture}')
                         else

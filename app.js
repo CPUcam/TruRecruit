@@ -126,7 +126,7 @@ app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.get('/upload', passportConf.isAuthenticated, userController.getUploadResumePage);
-app.post('/upload', passportConf.isAuthenticated, apiController.postFileUpload);
+// app.post('/upload', passportConf.isAuthenticated, apiController.postFileUpload);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
@@ -140,7 +140,7 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 // // app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
 // app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 
-app.post('/upload', upload.single('myFile'), apiController.postFileUpload);
+// app.post('/upload', upload.single('myFile'), apiController.postFileUpload);
 
 /**
  * OAuth authentication routes. (Sign in)

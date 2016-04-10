@@ -139,7 +139,7 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 // app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 // // app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
 // app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
-app.get('/upload', apiController.getFileUpload);
+
 app.post('/upload', upload.single('myFile'), apiController.postFileUpload);
 
 /**

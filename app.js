@@ -22,7 +22,6 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var multer = require('multer');
-var upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -74,7 +73,6 @@ app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({dest:'./uploads/'}));
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
@@ -110,7 +108,6 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-app.use('/uploads', express.static(path.join(__dirname + '/writable')));
 
 /**
  * Primary app routes.
@@ -128,7 +125,7 @@ app.post('/signup', userController.postSignup);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-app.get('/upload', passportConf.isAuthenticated, userController.getUploadResume);
+app.get('/upload', passportConf.isAuthenticated, userController.getUploadResumePage);
 app.post('/upload', passportConf.isAuthenticated, apiController.postFileUpload);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);

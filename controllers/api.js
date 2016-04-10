@@ -14,16 +14,6 @@ var TARGET_PATH = path.resolve(__dirname, '../writable/');
 var FILE_TYPES = ['file/pdf', 'file/doc', 'file/docx'];
 
 /**
- * GET /upload
- * File upload page
- */
-exports.getFileUpload = function(req, res, next) {
-  res.render('/upload', {
-    title: 'File Upload'
-  });
-};
-
-/**
  * POST /upload
  *
  */

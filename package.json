@@ -33,7 +33,7 @@
     "mime": "latest",
     "mongoose": "^4.4.3",
     "morgan": "^1.6.1",
-    "multer": "^1.1.0",
+    "multer": "latest",
     "node-linkedin": "^0.5.3",
     "node-sass-middleware": "^0.9.7",
     "nodemailer": "^2.1.0",

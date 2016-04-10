@@ -18,60 +18,9 @@ var FILE_TYPES = ['file/pdf', 'file/doc', 'file/docx'];
  *
  */
 exports.postFileUpload = function(req, res, next) {
-  var is;
-  var os;
-  var targetPath;
-  var targetName;
-  var tempPath = req.files.file.path;
-  //get the mime type of the file
-  var type = mime.lookup(req.files.file.path);
-  //get the extension of the file
-  var extension = req.files.file.path.split(/[. ]+/).pop();
-
-  //check to see if we support the file type
-  if (FILE_TYPES.indexOf(type) == -1) {
-    return res.send(415, 'Supported image formats: pdf, doc, docx.');
-  }
-
-  //create a new name for the image
-  targetName = uid(22) + '.' + extension;
-
-  //determine the new path to save the image
-  targetPath = path.join(TARGET_PATH, targetName);
-
-  //create a read stream in order to read the file
-  is = fs.createReadStream(tempPath);
-
-  //create a write stream in order to write the a new file
-  os = fs.createWriteStream(targetPath);
-
-  is.pipe(os);
-
-  //handle error
-  is.on('error', function() {
-    if (err) {
-      return res.send(500, 'Something went wrong');
-    }
-  });
-
-  //if we are done moving the file
-  is.on('end', function() {
-
-    //delete file from temp folder
-    fs.unlink(tempPath, function(err) {
-      if (err) {
-        return res.send(500, 'Something went wrong');
-      }
-
-      //send something nice to user
-      res.render('image', {
-        name: targetName,
-        type: type,
-        extension: extension
-      });
-
-    });//#end - unlink
-  });//#end - on.end
+  console.log(req.body);
+  console.log(req.files);
+  res.status(204).end();
 };
 
 

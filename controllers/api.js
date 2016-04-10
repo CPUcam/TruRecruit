@@ -21,6 +21,10 @@ exports.postFileUpload = function(req, res, next) {
   console.log(req.body);
   console.log(req.files);
   res.status(204).end();
+  if (req.files) {
+    console.log('success');
+  }
+  else console.log('failure');
 };
 
 

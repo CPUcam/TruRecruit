@@ -3,7 +3,7 @@
  * Home page.
  */
 exports.index = function(req, res) {
-  res.render('layout', {
-    title: 'Layout'
+  res.render('home', {
+    title: 'Home'
   });
 };

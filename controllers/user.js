@@ -150,7 +150,7 @@ exports.getSignature = function(req, res) {
            res.end();
        }
    });
-});
+};
 
 /**
  * GET /sign_s3

@@ -12,17 +12,3 @@ var busboy = require('connect-busboy');
 
 var TARGET_PATH = path.resolve(__dirname, '../writable/');
 var FILE_TYPES = ['file/pdf', 'file/doc', 'file/docx'];
-
-/**
- * POST /upload
- *
- */
-exports.postFileUpload = function(req, res, next) {
-  console.log(req.body);
-  console.log(req.files);
-  res.status(204).end();
-  if (req.files) {
-    console.log('success');
-  }
-  else console.log('failure');
-};

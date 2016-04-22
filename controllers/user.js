@@ -124,6 +124,47 @@ exports.getAccount = function(req, res) {
 };
 
 /**
+ * GET /sign_s3
+ * generates and returns signature with which to upload resume
+ */
+exports.getSignature = function(req, res) {
+   aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+   var s3 = new aws.S3();
+   var s3_params = {
+       Bucket: S3_BUCKET,
+       Key: req.query.file_name,
+       Expires: 60,
+       ContentType: req.query.file_type,
+       ACL: 'public-read'
+   };
+   s3.getSignedUrl('putObject', s3_params, function(err, data){
+       if(err){
+           console.log(err);
+       }
+       else{
+           var return_data = {
+               signed_request: data,
+               url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
+           };
+           res.write(JSON.stringify(return_data));
+           res.end();
+       }
+   });
+});
+
+/**
+ * GET /sign_s3
+ * generates and returns signature with which to upload resume
+ */
+//  exports.postSubmit = function(req, res) {
+//     username = req.body.username;
+//     full_name = req.body.full_name;
+//     avatar_url = req.body.avatar_url;
+//     update_account(username, full_name, avatar_url); // TODO: create this function
+//     // TODO: Return something useful or redirect
+// });
+
+/**
  * GET /upload
  * Resume upload.
  */

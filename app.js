@@ -22,7 +22,12 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var multer = require('multer');
+var aws = require('aws-sdk');
 // var upload = multer({ dest: './uploads/'});
+
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -74,7 +79,7 @@ app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({dest: './uploads/'}).single('myFile'));
+// app.use(multer({dest: './uploads/'}).single('myFile'));
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
@@ -129,7 +134,7 @@ app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.get('/upload', passportConf.isAuthenticated, userController.getUploadResumePage);
-// app.post('/upload', passportConf.isAuthenticated, apiController.postFileUpload);
+app.get('/sign_s3', passportConf.isAuthenticated, userController.getSignature);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);

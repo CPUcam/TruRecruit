@@ -1,5 +1,6 @@
 $(document).ready(function() {
-
+	var heightOfWindow = $(window).height();
+	$('.hero').css({"height": heightOfWindow.toString() });
 	/***************** Waypoints ******************/
 
 	$('.wp1').waypoint(function() {
@@ -56,13 +57,13 @@ $(document).ready(function() {
 			if (scroll >= 20) {
 				$('section.navigation').addClass('fixed');
 				$('header').css({
-					"padding": "35px 0"
+					"padding": "1em 0"
 				});
 				$('header .member-actions').css({
-					"top": "26px",
+					"top": "1em",
 				});
 				$('header .navicon').css({
-					"top": "34px",
+					"top": "10px",
 				});
 			} else {
 				$('section.navigation').removeClass('fixed');
@@ -70,14 +71,43 @@ $(document).ready(function() {
 					"padding": "50px 0"
 				});
 				$('header .member-actions').css({
-					"top": "41px",
+					"top": "50px",
 				});
+				
 				$('header .navicon').css({
-					"top": "48px",
+					"top": "40px",
 				});
 			}
 		});
 	});
+
+	$(function() {
+		var emplyBtn = $('.emply');
+		var candiBtn = $('.candi');
+
+		var emply = $('.contentEmployeer');
+		var candi = $('.contentCanidate');
+
+		emplyBtn.click(function() {
+			emply.toggle();
+			candi.removeClass('activeBtn');
+			emply.addClass('activeBtn');
+			if(candi.css('display') != 'none'){
+				candi.toggle();
+
+			
+			}
+			
+		});
+		candiBtn.click(function() {
+			candi.toggle();
+			emply.removeClass('activeBtn');
+			candi.addClass('activeBtn');
+			if(emply.css('display') != 'none'){
+				emply.toggle();
+			}
+		});
+	})
 	/***************** Smooth Scrolling ******************/
 
 	$(function() {

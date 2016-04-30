@@ -5,7 +5,89 @@
 Typography
 ========================================================================== */
 
+.small_text {
+  text-align: center;
+  margin-bottom: -1em;
+  width: 100%;
+  bottom: 0;
+  font-size:.7em;
+  color: #8e98af;
+}
 
+.bottomNav {
+  width: 100%;
+  bottom: 0;
+
+  position: absolute;
+  text-align: center;
+  color:white;
+  font-size: 1.7em;
+}
+
+.candidate {
+box-shadow: 1px -1px 5px rgba(0, 0, 0, 0.6);
+  color: #3D4351;
+background: #00bc96;
+  padding: .8em 0;
+  font-weight: 300;
+    border-bottom: .25em solid #E5E8E8;
+
+}
+
+.candidate:hover {
+
+  color: #02CEA6;
+
+    border-bottom: .25em solid #02CEA6;
+
+background: #fff;
+
+}
+
+.employer:hover {
+
+  color: #02CEA6;
+    border-bottom: .25em solid #02CEA6;
+
+background: #fff;
+
+}
+
+.candidate:active {
+
+  color: #02CEA6;
+
+    border-bottom: .25em solid #02CEA6;
+
+background: #DADADA;
+
+}
+
+.employer:active {
+
+  color: #02CEA6;
+    border-bottom: .25em solid #02CEA6;
+
+background: #DADADA;
+
+}
+
+.employer {
+box-shadow: 1px -1px 5px rgba(0, 0, 0, 0.6);
+    border-bottom: .25em solid #E5E8E8;
+  font-weight: 300;
+
+  padding: .8em 0;
+  color: #3D4351;
+background: #00bc96;
+
+}
+
+.divide {
+  margin-top: 10%;
+  height: 80%;
+
+}
 
 p {
   font-size: 15px;
@@ -309,7 +391,8 @@ Navigation
 Hero
 ========================================================================== */
 .hero {
-  height: 750px;
+  /*height: 750px;*/
+  min-height: 1000px;
   /*background: url("../img/hero.jpg") center center;*/
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -1143,3 +1226,17 @@ you can use the generic selector below, but it's slower:
 
 .icon-dribbble:before {
   content: "\e063"; }
+
+  header ul.member-actions li a {
+    color: #00d4aa;
+}
+
+
+.btn-white, .btn-white {
+    color: #00d4aa;
+    border-color: #00d4aa;
+}
+
+.login {
+    color: #fff !important;
+}

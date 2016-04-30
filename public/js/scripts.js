@@ -1,8 +1,7 @@
 $(document).ready(function() {
-	var heightOfWindow = $(window).height();
-	$('.hero').css({"height": heightOfWindow.toString() });
-	/***************** Waypoints ******************/
-
+		/***************** Waypoints ******************/
+var heightOfWindow = $(window).height();
+	$('.hero').css({"min-height": heightOfWindow.toString() +"px"});
 	$('.wp1').waypoint(function() {
 		$('.wp1').addClass('animated fadeInUp');
 	}, {
@@ -73,7 +72,7 @@ $(document).ready(function() {
 				$('header .member-actions').css({
 					"top": "50px",
 				});
-				
+
 				$('header .navicon').css({
 					"top": "40px",
 				});
@@ -90,19 +89,17 @@ $(document).ready(function() {
 
 		emplyBtn.click(function() {
 			emply.toggle();
-			candi.removeClass('activeBtn');
-			emply.addClass('activeBtn');
+
 			if(candi.css('display') != 'none'){
 				candi.toggle();
 
-			
+
 			}
-			
+
 		});
 		candiBtn.click(function() {
 			candi.toggle();
-			emply.removeClass('activeBtn');
-			candi.addClass('activeBtn');
+
 			if(emply.css('display') != 'none'){
 				emply.toggle();
 			}
@@ -127,5 +124,7 @@ $(document).ready(function() {
 		});
 
 	});
+
+
 
 });

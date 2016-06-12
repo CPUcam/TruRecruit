@@ -1328,7 +1328,7 @@ Changelog
 ### 2.0.2 (April 22, 2014)
 - Added Instagram Authentication
 - Added Instagram API example
-- Updated Instagram Strategy to use a "fake" email address similar to Twitter Startegy
+- Updated Instagram Strategy to use a "fake" email address similar to Twitter Strategy
 
 ### 2.0.1 (April 18, 2014)
 - Conditional CSRF support using [lusca](https://github.com/krakenjs/lusca)

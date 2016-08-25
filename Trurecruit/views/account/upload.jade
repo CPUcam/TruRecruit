@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+  .page-header
+  h3 Upload Resume
+  .row
+    .col-sm-6
+      p All files will be uploaded to "/uploads" directory.
+      form(role='form', enctype='multipart/form-data', method='POST')
+        .form-group
+          label.control-label File Input
+          input(type='file', name='myFile')
+        button.btn.btn-primary(type='submit') Submit
+
+      

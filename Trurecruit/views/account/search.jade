@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  h3 Search for Resume
+  form.form-horizontal(id='signup-form', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='code') Code
+      .col-sm-7
+        input.form-control(type='code', name='code', id='code', placeholder='Code', autofocus, required)
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.btn.btn-success(type='submit')
+          i.fa.fa-user-plus
+          | Search
+
+  if !result
+    p #{name}
+    p #{code}
+    <iframe src=#{path} , width='500', height='700' allowfullscreen webkitallowfullscreen></iframe>

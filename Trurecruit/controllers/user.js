@@ -6,7 +6,10 @@ const s3 = require('s3');
 const fs = require('fs');
 const User = require('../models/User');
 
-
+/*
+ * Client required for s3
+ *
+ */
 var client = s3.createClient({
   maxAsyncS3: 20,     // this is the default
   s3RetryCount: 3,    // this is the default
@@ -14,19 +17,28 @@ var client = s3.createClient({
   multipartUploadThreshold: 20971520, // this is the default (20 MB)
   multipartUploadSize: 15728640, // this is the default (15 MB)
   s3Options: {
-    accessKeyId: "AKIAJ6ZY4TVRC6J33U5Q",
-    secretAccessKey: "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",
+    accessKeyId: process.env.S3KEYID,
+    secretAccessKey: process.env.S3ACCESSKEY,
     // any other options are passed to new AWS.S3()
     // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
   },
 });
 
+/*
+ * GET /upload
+ *
+ */
 exports.getUpload = (req, res) => {
   res.render('account/upload', {
     title: 'Upload'
   });
 };
 
+
+/*
+ * POST /upload
+ * upload resume to s3 bucket
+ */
 exports.postUpload = (req, res, next) => {
   req.flash('success', { msg: 'File was uploaded successfully.' });
   console.log(req.file);
@@ -57,7 +69,7 @@ exports.postUpload = (req, res, next) => {
     },
   };
 
-  console.log(rand);
+  // console.log(rand);
 
   var uploader = client.uploadFile(params);
     uploader.on('error', function(err) {
@@ -75,18 +87,12 @@ exports.postUpload = (req, res, next) => {
   res.redirect('/upload/code');
 };
 
+
 exports.getCode = (req, res) => {
   res.render('account/code', {
     title: 'Code'
   });
 };
-
-exports.getResult = (req, res) => {
-  res.render('account/code', {
-    title: 'Result'
-  });
-};
-
 
 /**
  * GET /login
@@ -426,8 +432,8 @@ exports.postReset = (req, res, next) => {
       });
       const mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Your Hackathon Starter password has been changed',
+        from: 'passwordReset@trurecruit.com',
+        subject: 'Your TruRecruit password has been changed',
         text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
       };
       transporter.sendMail(mailOptions, (err) => {
@@ -499,8 +505,8 @@ exports.postForgot = (req, res, next) => {
       });
       const mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Reset your password on Hackathon Starter',
+        from: 'passwordReset@trurecruit.com',
+        subject: 'Reset your password on TruRecruit',
         text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
           Please click on the following link, or paste this into your browser to complete the process:\n\n
           http://${req.headers.host}/reset/${token}\n\n

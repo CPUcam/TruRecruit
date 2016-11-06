@@ -1,0 +1,56 @@
+Discussion Section Problem Set #: 8
+Student Name:                     Raul Camacho
+EID:                              rac3983
+CS login:                         raul
+Email address:                    rcamacho96@gmail.com
+Unique Number:                    51460
+
+1.
+
+    rotation = .5 * (60sec/15,000rpm) * 1000ms/sec
+    rotation ~ 2ms
+    Transfer = (60sec/15,000rpm) * 1/500sectors/track * 1,000ms/sec
+    Transfer ~ .008ms
+    Access = seek + rotation + transfer
+           = 8ms + 2ms + .008ms
+           ~ 10.008ms
+
+2.
+    /usr/jane/classes/cs439/exam_study_notes.txt
+    
+    1. Read the inode for / from a fixed location
+    2. Read the first data block for root
+    3. Read the inode for usr/
+    4. Read the first data block for usr/
+    5. Read the inode for jane/
+    6. Read the first data block for jane/
+    7. Read the inode for classes/
+    ...
+    11. Read the inode for exam_study_notes.txt
+    12. Write data to the file
+        - Copies buffer into file
+    
+3.
+
+    I don't think it is fundamentally necessary to 
+    store the info about unallocated disk sectors
+    on the disk. That information can be stored in
+    a cache or RAM. This would be more volatile 
+    and would last less time than a disk, but the
+    data can be refreshed before it is lost.
+
+4.
+
+    The impact on performance would not be 
+    significant because the file system would
+    only check the replica inode array if the other
+    failed. Backups are usually a good idea.
+
+5.
+
+    A journaling file system keeps track of changes 
+    and expected future changes using a journal. 
+    This allows crashes to be less catastrophic by 
+    allowing the OS to read the state of the disk 
+    at crash from the journal, instead of having to 
+    read from a root.

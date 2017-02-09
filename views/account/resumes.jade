@@ -3,6 +3,7 @@ extends ../layout
 block content
   h3 #{user.email}
   p #{user.code}
+  p #{user.name}
   #qrcode
   script.
     var qrcode = new QRCode(document.getElementById("qrcode"), {

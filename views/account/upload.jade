@@ -5,8 +5,11 @@ block content
   h3 Upload Resume
   .row
     .col-sm-6
-      p All files will be uploaded to "/uploads" directory.
       form(role='form', enctype='multipart/form-data', method='POST')
+        .form-group
+          label.col-sm-3.control-label(for='name') Resume Nickname
+          .col-sm-7
+            input.form-control(type='text', name='name', id='name', placeholder='Nickname', autofocus, required)
         .form-group
           label.control-label File Input
           input(type='file', name='myFile')

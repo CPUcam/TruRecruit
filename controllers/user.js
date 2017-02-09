@@ -47,74 +47,74 @@ function getRandom() {
  * POST /upload
  * upload resume to s3 bucket
  */
+
+ //Updates user model by pushing name, code pair to resume array in model
 exports.postUpload = (req, res, next) => {
   console.log(req.file);
 
   var rand = getRandom();
-  var boo = true;
 
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-  //   rand = '19121';
-  //
-  //   while (boo) {
-  //     User.findOne({ code: rand }, (err, rep) => {
-  //       if (rep) {
-  //         rand = getRandom();
-  //       }
-  //       else if (!rep) { boo = false; }
-  //     });
-  //   }
-  //
-    if (user.rCount >= 2) {
-      req.flash('errors', { msg: 'Basic members are only allowed two resume uploads.'});
-      return res.redirect('/upload');
-    } else {
-      user.rCount += 1;
-      console.log(user.rCount);
-      user.code = rand;
-      user.save((err) => {
-        if (err) { return next(err)}
+  async.series([
+    function checkLimit(callback) {
+      User.findById(req.user.id, (err, user) => {
+        if (err) { return next(err); }
+        if (user.rCount >= 5) {
+          console.log('excess');
+          req.flash('errors', { msg: 'Basic members are only allowed two resume uploads.'});
+          //return res.redirect('/resumes');
+        } else {
+          user.rCount += 1;
+          console.log(user.rCount);
+          user.resumes.push({ name: req.body.name, code: rand });
+          // user.code = rand;
+          user.save((err) => {
+            if (err) { return next(err); }
+          });
+        }
+      });
+      callback();
+    },
+    function uploadFile(callback) {
+      console.log('we made it');
+      var params = {
+        localFile: req.file.path,
+
+        s3Params: {
+          Bucket: "trurecruit",
+          Key: rand + ".pdf",
+          // other options supported by putObject, except Body and ContentLength.
+          // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
+        },
+      };
+      var uploader = client.uploadFile(params);
+        uploader.on('error', function(err) {
+          console.error("unable to upload:", err.stack);
+        });
+        uploader.on('progress', function() {
+          console.log("progress", uploader.progressMd5Amount,
+                    uploader.progressAmount, uploader.progressTotal);
+        });
+        uploader.on('end', function() {
+          console.log("done uploading");
+        });
+      fs.unlink(req.file.path, next);
+
+      req.flash('success', { msg: 'Resume was uploaded successfully.' });
+      //return res.redirect('/upload/code');
+      callback();
+    }],
+    function(err) {
+      if (err) { return next(err); }
+      return res.render('account/resumes', {
+        name: req.user.name
       });
     }
-  });
-
-  req.flash('success', { msg: 'File was uploaded successfully.' });
-
-  // console.log(req.file);
-
-  var params = {
-    localFile: req.file.path,
-
-    s3Params: {
-      Bucket: "trurecruit",
-      Key: rand + ".pdf",
-      // other options supported by putObject, except Body and ContentLength.
-      // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
-    },
-  };
-
-  // console.log(rand);
-
-  var uploader = client.uploadFile(params);
-    uploader.on('error', function(err) {
-      console.error("unable to upload:", err.stack);
-    });
-    uploader.on('progress', function() {
-      console.log("progress", uploader.progressMd5Amount,
-                uploader.progressAmount, uploader.progressTotal);
-    });
-    uploader.on('end', function() {
-      console.log("done uploading");
-    });
-  fs.unlink(req.file.path, next);
-
-  //return res.redirect('/upload/code');
+  );
 };
 
 
-exports.getCode = (req, res) => {
-  res.render('account/code', {
+exports.getResumes = (req, res) => {
+  res.render('account/resumes', {
     title: 'Code'
   });
 };
@@ -146,7 +146,7 @@ exports.getSearch = (req, res) => {
  * POST /search
  * Search db and s3 bucket for user and resume
  */
-exports.postSearch = (req, res, next) => {
+exports.postSearch = (req, res) => {
 
   const errors = req.validationErrors();
 

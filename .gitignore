@@ -20,6 +20,9 @@ tmp
 node_modules
 bower_components
 
+# upload directory
+uploads
+
 # Editors
 .idea
 *.iml

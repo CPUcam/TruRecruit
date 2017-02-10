@@ -104,7 +104,6 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-app.use('/viewer', express.static('node_modules/node-viewerjs/release'));
 app.use('/uploads', express.static('uploads'));
 
 /**
@@ -122,44 +121,14 @@ app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
-app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
-app.get('/upload', passportConfig.isAuthenticated, userController.getUpload);
-app.post('/upload', passportConfig.isAuthenticated, upload.single('myFile'), userController.postUpload);
-app.get('/resumes', passportConfig.isAuthenticated, userController.getResumes);
-app.get('/search', passportConfig.isAuthenticated, userController.getSearch);
-app.post('/search', passportConfig.isAuthenticated, userController.postSearch);
-app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
-app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
-app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-
-/**
- * OAuth authentication routes. (Sign in)
- */
-app.get('/auth/instagram', passport.authenticate('instagram'));
-app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/github', passport.authenticate('github'));
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
+app.get('/account', userController.getAccount);
+app.get('/upload', userController.getUpload);
+app.post('/upload', upload.single('myFile'), userController.postUpload);
+app.get('/resumes', userController.getResumes);
+app.post('/account/profile', userController.postUpdateProfile);
+app.post('/account/password', userController.postUpdatePassword);
+app.post('/account/delete', userController.postDeleteAccount);
+app.get('/account/unlink/:provider', userController.getOauthUnlink);
 
 /**
  * Error Handler.

@@ -1,44 +1,67 @@
-extends ../layout
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='theme-color' content='#4DA5F4')
+    meta(name='csrf-token', content=_csrf)
+    title #{title} - Hackathon Starter
+    link(rel='shortcut icon', href='/favicon.png')
+    link(rel='stylesheet', href='/css/main.css')
+    link(type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.css")
+    script(src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js")
+    script.
+      // Initialize Firebase
+      // (TODO) Replace with TruRecruit config snippet
+      var config = {
+          apiKey: "AIzaSyA-x9QZH1YezDMX-GPxsNPyK3H0WwQ5cFw",
+          authDomain: "blistering-heat-648.firebaseapp.com",
+          databaseURL: "https://blistering-heat-648.firebaseio.com",
+          storageBucket: "blistering-heat-648.appspot.com",
+          messagingSenderId: "610839407937"
+      };
+      firebase.initializeApp(config);
+    script(src="https://cdn.firebase.com/libs/firebaseui/1.0.0/firebaseui.js")
+    
+    script.
+      // FirebaseUI config.
+      var uiConfig = {
+        signInSuccessUrl: '/',
+        signInOptions: [
+          // Leave the lines as is for the providers you want to offer your users.
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+          //firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+          firebase.auth.GithubAuthProvider.PROVIDER_ID,
+          firebase.auth.EmailAuthProvider.PROVIDER_ID
+        ],
+        // Terms of service url.
+        tosUrl: '<your-tos-url>'
+      };
 
-block content
-  .page-header
-    h3 Sign in
-  form.form-horizontal(method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group
-      label.col-sm-3.control-label(for='email') Email
-      .col-sm-7
-        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
-    .form-group
-      label.col-sm-3.control-label(for='password') Password
-      .col-sm-7
-        input.form-control(type='password', name='password', id='password', placeholder='Password', required)
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        button.col-sm-3.btn.btn-primary(type='submit')
-          i.fa.fa-user
-          | Login
-        a.btn.btn-link(href='/forgot') Forgot your password?
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        hr
-    .form-group
-      .col-sm-offset-3.col-sm-7
-        a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
-          i.fa.fa-facebook
-          | Sign in with Facebook
-        a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
-          i.fa.fa-twitter
-          | Sign in with Twitter
-        a.btn.btn-block.btn-google.btn-social(href='/auth/google')
-          i.fa.fa-google-plus
-          | Sign in with Google
-        a.btn.btn-block.btn-github.btn-social(href='/auth/github')
-          i.fa.fa-github
-          | Sign in with GitHub
-        a.btn.btn-block.btn-linkedin.btn-social(href='/auth/linkedin')
-          i.fa.fa-linkedin
-          | Sign in with LinkedIn
-        a.btn.btn-block.btn-instagram.btn-social(href='/auth/instagram')
-          i.fa.fa-instagram
-          | Sign in with Instagram
+      // Initialize the FirebaseUI Widget using Firebase.
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      // The start method will wait until the DOM is loaded.
+      ui.start('#firebaseui-auth-container', uiConfig);
+      
+  body
+    include ../partials/header
+
+    #firebaseui-auth-container
+
+    include ../partials/footer
+
+    script(src='/js/lib/jquery-2.2.0.min.js')
+    script(src='/js/lib/bootstrap.min.js')
+    script(src='/js/main.js')
+
+
+    // Google Analytics: change UA-XXXXX-X to be your site's ID
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-XXXXX-X', 'auto');
+      ga('send', 'pageview');

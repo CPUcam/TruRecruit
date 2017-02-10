@@ -34,15 +34,6 @@ exports.getUpload = (req, res) => {
   });
 };
 
-function getRandom() {
-  var rand = [];
-
-  for (var i = 0; i < 6; i++) {
-    rand.push(Math.floor(Math.random() * 10));
-  }
-  return rand.join("");
-}
-
 /*
  * POST /upload
  * upload resume to s3 bucket
@@ -52,7 +43,7 @@ function getRandom() {
 exports.postUpload = (req, res, next) => {
   console.log(req.file);
 
-  var rand = getRandom();
+  var rand; //= getRandom();
 
   async.series([
     function checkLimit(callback) {
@@ -65,8 +56,9 @@ exports.postUpload = (req, res, next) => {
         } else {
           user.rCount += 1;
           console.log(user.rCount);
-          user.resumes.push({ name: req.body.name, code: rand });
+          //user.resumes.push({ name: req.body.name, code: rand });
           // user.code = rand;
+          rand = user.email;
           user.save((err) => {
             if (err) { return next(err); }
           });

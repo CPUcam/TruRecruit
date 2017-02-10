@@ -1,0 +1,17 @@
+.homeButton {
+  width: 175px;
+  margin-top: 25px;
+  color: #eeeeee;
+  border-width: 3px;
+  border-color: #00d4aa;
+  border-radius: 20px;
+}
+
+.homeButton:hover {
+  background-color: #00d4aa;
+  color: #eeeeee;
+}
+
+.buttonContainer {
+  margin-left: 100px;
+}
